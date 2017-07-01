@@ -5,6 +5,7 @@ import android.os.CountDownTimer;
 
 import com.atguigu.im0224.R;
 import com.atguigu.im0224.base.BaseActivity;
+import com.atguigu.im0224.common.Model;
 import com.hyphenate.chat.EMClient;
 
 public class WelcomeAcyivity extends BaseActivity {
@@ -34,7 +35,23 @@ public class WelcomeAcyivity extends BaseActivity {
     //选择进入哪个界面
     private void selectChageActivity() {
 
-        new Thread() {
+//        new Thread() {
+//            public void run() {
+//                boolean isLogin = EMClient.getInstance().isLoggedInBefore();
+//                if (isLogin) {
+//                    //登录过
+//                    startActivity(new Intent(WelcomeAcyivity.this, MainActivity.class));
+//                    finish();
+//                } else {
+//                    //没有登录过
+//                    startActivity(new Intent(WelcomeAcyivity.this, LoginActivity.class));
+//                    finish();
+//                }
+//            }
+//        }.start();
+
+        Model.getInstance().getGlobalThread().execute(new Runnable() {
+            @Override
             public void run() {
                 boolean isLogin = EMClient.getInstance().isLoggedInBefore();
                 if (isLogin) {
@@ -47,7 +64,8 @@ public class WelcomeAcyivity extends BaseActivity {
                     finish();
                 }
             }
-        }.start();
+        });
+
     }
 
     @Override

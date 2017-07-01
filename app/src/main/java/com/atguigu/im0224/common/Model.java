@@ -2,6 +2,8 @@ package com.atguigu.im0224.common;
 
 import android.content.Context;
 
+import com.atguigu.im0224.model.bean.UserInfo;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,6 +31,11 @@ public class Model {
 
     public void init(Context context){
         this.context = context;
+    }
+
+    //登录成功以后保存用户数据
+    public void loginSuccess(UserInfo userInfo){
+
     }
 
 }

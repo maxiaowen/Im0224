@@ -34,6 +34,9 @@ public class Model {
     public void init(Context context){
         this.context = context;
         this.accountDAO = new AccountDAO(context);
+
+        //初始化全局监听
+        new GlobalListener(context);
     }
 
     //登录成功以后保存用户数据

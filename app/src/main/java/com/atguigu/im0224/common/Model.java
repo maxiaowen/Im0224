@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.atguigu.im0224.model.bean.UserInfo;
 import com.atguigu.im0224.model.dao.AccountDAO;
+import com.atguigu.im0224.model.manager.HelperManager;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,6 +26,8 @@ public class Model {
     private Context context;
     private AccountDAO accountDAO;
 
+    private HelperManager manager;
+
     private ExecutorService service = Executors.newCachedThreadPool();
 
     public ExecutorService getGlobalThread(){
@@ -45,9 +48,22 @@ public class Model {
         //添加用户
         accountDAO.addAccount(userInfo);
 
+        if(manager != null) {
+            manager.close();
+        }
+
+        //创建HelperManager
+        manager = new HelperManager(context,userInfo.getUsername()+".db");
+
     }
     public AccountDAO getAccountDAO(){
         return accountDAO;
     }
 
+    /*
+        * 返回HelperManager的对象
+        * */
+    public HelperManager getManager() {
+        return manager;
+    }
 }

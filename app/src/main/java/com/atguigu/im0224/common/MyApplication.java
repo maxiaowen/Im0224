@@ -1,6 +1,8 @@
 package com.atguigu.im0224.common;
 
 import android.app.Application;
+import android.content.Context;
+import android.os.Handler;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
@@ -10,6 +12,23 @@ import com.hyphenate.chat.EMOptions;
  */
 
 public class MyApplication extends Application{
+
+    private static Context context;
+    private static Handler handler;
+    private static int pid;
+
+    public static Context getContext() {
+        return context;
+    }
+
+    public static Handler getHandler() {
+        return handler;
+    }
+
+    public static int getPid() {
+        return pid;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -27,5 +46,9 @@ public class MyApplication extends Application{
 
         //初始化Model
         Model.getInstance().init(this);
+
+        context = this;
+        handler = new Handler();
+        pid = android.os.Process.myPid();
     }
 }

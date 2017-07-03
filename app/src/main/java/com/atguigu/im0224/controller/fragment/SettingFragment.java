@@ -43,6 +43,7 @@ public class SettingFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         String currentUser = EMClient.getInstance().getCurrentUser();
+        currentUser.substring(0,currentUser.length()).toLowerCase();
         settingBtnExit.setText("退出登录(" + currentUser + ")");
 
         settingBtnExit.setOnClickListener(new View.OnClickListener() {

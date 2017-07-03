@@ -1,32 +1,39 @@
 package com.atguigu.im0224.controller.fragment;
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+
+import com.atguigu.im0224.R;
+import com.atguigu.im0224.utils.UIUtils;
+import com.hyphenate.easeui.ui.EaseContactListFragment;
 
 /**
  * Created by Administrator on 2017/7/3.
  */
 
-public class ContactListFragment extends Fragment {
+public class ContactListFragment extends EaseContactListFragment {
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected void initView() {
+        super.initView();
 
-        TextView textView = new TextView(getActivity());
+    }
 
-        textView.setText("联系人列表");
-        textView.setTextColor(Color.RED);
-        textView.setTextSize(30);
-        textView.setGravity(Gravity.CENTER);
+    @Override
+    protected void setUpView() {
+        super.setUpView();
 
-        return textView;
+        View headView = View.inflate(getActivity(), R.layout.head_view,null);
+
+        final LinearLayout friends = (LinearLayout) headView.findViewById(R.id.ll_new_friends);
+
+        listView.addHeaderView(headView);
+
+        friends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UIUtils.showToast(friends+"");
+            }
+        });
     }
 }

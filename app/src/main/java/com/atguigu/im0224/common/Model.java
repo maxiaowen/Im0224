@@ -5,6 +5,7 @@ import android.content.Context;
 import com.atguigu.im0224.model.bean.UserInfo;
 import com.atguigu.im0224.model.dao.AccountDAO;
 import com.atguigu.im0224.model.manager.HelperManager;
+import com.atguigu.im0224.utils.SPUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -54,6 +55,10 @@ public class Model {
 
         //创建HelperManager
         manager = new HelperManager(context,userInfo.getUsername()+".db");
+
+        //初始化SPUtils
+
+        SPUtils.getInstence().init(context,userInfo.getUsername());
 
     }
     public AccountDAO getAccountDAO(){

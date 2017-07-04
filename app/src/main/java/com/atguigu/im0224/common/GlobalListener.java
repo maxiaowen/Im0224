@@ -2,6 +2,8 @@ package com.atguigu.im0224.common;
 
 import android.content.Context;
 
+import com.atguigu.im0224.model.bean.InvitationInfo;
+import com.atguigu.im0224.model.bean.UserInfo;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 
@@ -21,6 +23,17 @@ public class GlobalListener {
         //收到好友邀请  别人加你
         @Override
         public void onContactInvited(String username, String reason) {
+
+            //添加邀请
+            InvitationInfo invitationInfo = new InvitationInfo();
+            invitationInfo.setReason(reason);
+            invitationInfo.setUserInfo(new UserInfo(username,username));
+
+            Model.getInstance().getManager().getInvitationDAO().addInvitation(invitationInfo);
+
+
+            //保存小红点
+
 
         }
 

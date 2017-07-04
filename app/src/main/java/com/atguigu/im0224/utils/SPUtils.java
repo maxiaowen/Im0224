@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 
 public class SPUtils {
 
+    public static String NEW_INVITE;
+
     /**
      * 单例模式
      */

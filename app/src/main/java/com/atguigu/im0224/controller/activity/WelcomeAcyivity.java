@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import com.atguigu.im0224.R;
 import com.atguigu.im0224.base.BaseActivity;
 import com.atguigu.im0224.common.Model;
+import com.atguigu.im0224.model.bean.UserInfo;
 import com.hyphenate.chat.EMClient;
 
 public class WelcomeAcyivity extends BaseActivity {
@@ -56,6 +57,10 @@ public class WelcomeAcyivity extends BaseActivity {
                 boolean isLogin = EMClient.getInstance().isLoggedInBefore();
                 if (isLogin) {
                     //登录过
+                    //初始化登录成功后的操作
+                    String currentUser = EMClient.getInstance().getCurrentUser();
+                    Model.getInstance().loginSuccess(new UserInfo(currentUser,currentUser));
+
                     startActivity(new Intent(WelcomeAcyivity.this, MainActivity.class));
                     finish();
                 } else {

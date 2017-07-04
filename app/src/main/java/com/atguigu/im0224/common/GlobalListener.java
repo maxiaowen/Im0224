@@ -42,6 +42,7 @@ public class GlobalListener {
             InvitationInfo invitationInfo = new InvitationInfo();
             invitationInfo.setReason(reason);
             invitationInfo.setUserInfo(new UserInfo(username,username));
+            invitationInfo.setStatus(InvitationInfo.InvitationStatus.NEW_INVITE);
 
             Model.getInstance().getManager().getInvitationDAO().addInvitation(invitationInfo);
 

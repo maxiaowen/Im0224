@@ -1,11 +1,18 @@
 package com.atguigu.im0224.controller.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.atguigu.im0224.R;
+import com.atguigu.im0224.common.Constant;
 import com.atguigu.im0224.controller.activity.AddContactActivity;
+import com.atguigu.im0224.utils.SPUtils;
 import com.atguigu.im0224.utils.UIUtils;
 import com.hyphenate.easeui.ui.EaseContactListFragment;
 
@@ -14,6 +21,18 @@ import com.hyphenate.easeui.ui.EaseContactListFragment;
  */
 
 public class ContactListFragment extends EaseContactListFragment {
+
+    private BroadcastReceiver inviteReciver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //接收广播
+            isShowRedView();
+        }
+    };
+
+
+    private ImageView redView;
+
 
     @Override
     protected void initView() {
@@ -28,27 +47,46 @@ public class ContactListFragment extends EaseContactListFragment {
         //初始化Listview头布局
         initHeadView();
 
+        isShowRedView();
+
         titleBar.setRightImageResource(R.drawable.ease_blue_add);
         titleBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(),AddContactActivity.class));
+                startActivity(new Intent(getActivity(), AddContactActivity.class));
             }
         });
+
+        //注册监听
+        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(getActivity());
+        manager.registerReceiver(inviteReciver, new IntentFilter(Constant.NEW_INVITE_CHANGE));
+
+    }
+
+    /*
+  * 判断小红点是否展示
+  * */
+    private void isShowRedView() {
+        //获取小红点的状态
+        Boolean bolValue = SPUtils.getInstence().getBolValue(SPUtils.NEW_INVITE);
+        //是否显示小红点
+        redView.setVisibility(bolValue ? View.VISIBLE : View.GONE);
     }
 
 
     private void initHeadView() {
-        View headView = View.inflate(getActivity(), R.layout.head_view,null);
+        View headView = View.inflate(getActivity(), R.layout.head_view, null);
 
         final LinearLayout friends = (LinearLayout) headView.findViewById(R.id.ll_new_friends);
+
+        redView = (ImageView) headView.findViewById(R.id.contanct_iv_invite);
 
         listView.addHeaderView(headView);
 
         friends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UIUtils.showToast(friends+"");
+                UIUtils.showToast(friends + "");
             }
         });
     }

@@ -1,11 +1,14 @@
 package com.atguigu.im0224.controller.fragment;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -86,6 +89,62 @@ public class ContactListFragment extends EaseContactListFragment {
         //展示联系人
         showContact();
 
+        //删除联系人
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                
+                if(position == 0) {
+                    return false;
+                }
+
+                //弹警告
+                showDialog(position);
+
+                return true;
+            }
+        });
+
+    }
+
+    private void showDialog(final int position) {
+
+        new AlertDialog.Builder(getActivity())
+                    .setTitle("确定要删除吗")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            Model.getInstance().getGlobalThread().execute(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    UserInfo userInfo = contacts.get(position - 1);
+
+                                    try {
+                                        //网络
+                                        EMClient.getInstance().contactManager().deleteContact(userInfo.getHxid());
+                                        //本地
+                                        Model.getInstance().getManager().getContactDAO().deleteContactByHxid(userInfo.getHxid());
+                                        //内存和页面
+                                        if(UIUtils.getContext() != null) {
+                                            UIUtils.UIThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    refreshData();
+                                                }
+                                            });
+                                        }
+                                    } catch (HyphenateException e) {
+                                        e.printStackTrace();
+                                        UIUtils.showToast(e.getMessage());
+                                    }
+                                }
+                            });
+                        }
+                    })
+                    .setNegativeButton("取消", null)
+                    .show();
     }
 
     //展示联系人列表
@@ -134,12 +193,13 @@ public class ContactListFragment extends EaseContactListFragment {
         });
     }
 
+    private List<UserInfo> contacts;
     /*
    * 从本地获取联系人数据
    * */
     private void refreshData() {
         //从数据库获取所有联系人
-        List<UserInfo> contacts = Model.getInstance().getManager().getContactDAO().getContacts();
+        contacts = Model.getInstance().getManager().getContactDAO().getContacts();
 
         //校验
         if (contacts != null){

@@ -45,6 +45,7 @@ public class ContactListFragment extends EaseContactListFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             //添加或者删除好友以后调用此方法
+            refreshData();
         }
     };
 
@@ -105,24 +106,24 @@ public class ContactListFragment extends EaseContactListFragment {
                     List<String> contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
 
                     //本地  数据转换
-                    List<UserInfo> list = new ArrayList<>();
-                    for(int i = 0; i < contacts.size(); i++) {
-                        UserInfo userInfo = new UserInfo();
-                        list.add(userInfo);
+                    List<UserInfo> userinfos = new ArrayList<UserInfo>();
+                    for (String contacs:contacts) {
+                        UserInfo userinfo = new UserInfo(contacs,contacs);
+                        userinfos.add(userinfo);
                     }
                     //保存从服务器获取的联系人
-                    Model.getInstance().getManager().getContactDAO().saveContacts(list,true);
+                    Model.getInstance().getManager().getContactDAO().saveContacts(userinfos,true);
 
                     //内存和页面
-                    if(UIUtils.getContext() == null) {
-                        return;
-                    }
-                    UIUtils.UIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            refreshData();
-                        }
-                    });
+                   if(getActivity() == null) {
+                       return;
+                   }
+                   getActivity().runOnUiThread(new Runnable() {
+                       @Override
+                       public void run() {
+                           refreshData();
+                       }
+                   });
 
 
                 } catch (HyphenateException e) {
